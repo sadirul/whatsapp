@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mextjs-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mextjs
+      MYSQL_USER: mextjs
+      MYSQL_PASSWORD: mextjs_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - mextjs-network
+
+  backend:
+    build: ./backend
+    container_name: mextjs-backend
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      NODE_ENV: development
+      DB_HOST: mysql
+      DB_USER: mextjs
+      DB_PASSWORD: mextjs_password
+      DB_NAME: mextjs
+      JWT_SECRET: super_secret_key
+      CORS_ORIGIN: http://localhost:3001
+    depends_on:
+      - mysql
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - ./backend/sessions:/app/sessions
+    networks:
+      - mextjs-network
+    command: npm run dev
+
+  frontend:
+    build: ./frontend
+    container_name: mextjs-frontend
+    ports:
+      - "3001:3000"
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:3000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - mextjs-network
+    command: npm run dev
+
+volumes:
+  mysql-data:
+
+networks:
+  mextjs-network:
+    driver: bridge
