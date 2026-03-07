@@ -303,9 +303,10 @@ export const reconnectAllClients = async () => {
       return;
     }
 
-    console.log(`Restoring ${users.length} WhatsApp session(s)...`);
+    console.log(`Restoring ${users.length} WhatsApp session(s) in background...`);
 
-    for (const user of users) {
+    // Restore all sessions in parallel; don't await — runs in background
+    const restore = async (user) => {
       try {
         const { client } = await getWhatsAppClient(user.id);
         if (client.info) {
@@ -324,8 +325,12 @@ export const reconnectAllClients = async () => {
           { where: { id: user.id } }
         );
       }
-    }
+    };
 
+    // Small delay so Socket.IO listeners on the frontend have time to reconnect
+    await new Promise((r) => setTimeout(r, 2000));
+
+    await Promise.all(users.map(restore));
     console.log('WhatsApp session restore complete');
   } catch (err) {
     console.error('Reconnect all clients error:', err);

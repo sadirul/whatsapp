@@ -20,10 +20,6 @@ const startServer = async () => {
     // Initialize database
     await initializeApp();
 
-    // Reconnect WhatsApp clients for users with connected status
-    console.log('Reconnecting WhatsApp clients...');
-    await reconnectAllClients();
-
     // Create HTTP server and attach Socket.IO
     const httpServer = http.createServer(app);
     const io = new Server(httpServer, {
@@ -40,6 +36,13 @@ const startServer = async () => {
     server.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
       console.log(`📡 Socket.IO enabled for real-time events`);
+
+      // Restore WhatsApp sessions AFTER the server+socket are fully ready
+      // so that socket events (whatsapp:ready etc.) reach connected frontend clients
+      console.log('Auto-restoring WhatsApp sessions...');
+      reconnectAllClients().catch((err) =>
+        console.error('Session restore error:', err)
+      );
     });
   } catch (error) {
     console.error('Failed to start server:', error);
@@ -51,11 +54,10 @@ const startServer = async () => {
 const gracefulShutdown = async () => {
   console.log('Shutting down gracefully...');
 
-  // Close all WhatsApp clients
+  // Close all WhatsApp clients — use destroy() only so sessions are preserved for auto-restore on next start
   const clients = getAllClients();
   for (const [userId, { client }] of clients) {
     try {
-      await client.logout();
       await client.destroy();
       console.log(`WhatsApp client closed for user ${userId}`);
     } catch (err) {

@@ -44,11 +44,11 @@ export default function WhatsAppPage() {
       router.push('/login');
     } else if (user) {
       fetchStatus();
-      // Fallback poll only when socket may not be connected (every 10s)
-      const interval = setInterval(fetchStatus, 10000);
+      // Poll every 5s while connecting (auto-restore in progress), otherwise every 15s
+      const interval = setInterval(fetchStatus, status === 'connecting' ? 5000 : 15000);
       return () => clearInterval(interval);
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, status]);
 
   // Pre-initialize WhatsApp in background when page loads (disconnected users)
   // So QR is ready instantly when user clicks Initialize
@@ -56,7 +56,6 @@ export default function WhatsAppPage() {
     if (!user || status !== 'disconnected') return;
     whatsappAPI.initialize().catch(() => {});
   }, [user, status]);
-
   const fetchStatus = async () => {
     try {
       const response = await whatsappAPI.getStatus();
@@ -200,6 +199,22 @@ export default function WhatsAppPage() {
                   >
                     <span>→</span> Go to Dashboard
                   </button>
+                </div>
+              </div>
+            ) : status === 'connecting' ? (
+              <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+                <div className="text-center py-12">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full mb-4 animate-pulse">
+                    <span className="text-3xl">⏳</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Restoring Session…</h3>
+                  <p className="text-gray-500 text-sm mb-6">
+                    Your previous WhatsApp session is being restored automatically.<br />
+                    This may take up to 30 seconds.
+                  </p>
+                  <div className="flex justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
+                  </div>
                 </div>
               </div>
             ) : (
