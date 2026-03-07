@@ -8,6 +8,9 @@ import { authAPI } from '../services/api';
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: '📊' },
   { href: '/whatsapp', label: 'WhatsApp', icon: '💬' },
+  { href: '/contacts', label: 'Contacts', icon: '👥' },
+  { href: '/templates', label: 'Templates', icon: '📝' },
+  { href: '/scheduler', label: 'Scheduler', icon: '⏰' },
   { href: '/messages', label: 'Messages', icon: '✉️' },
   { href: '/test-api', label: 'Test API', icon: '🧪' },
   { href: '/documentation', label: 'Documentation', icon: '📚' },

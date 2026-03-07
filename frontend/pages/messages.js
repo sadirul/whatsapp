@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 import { useAuth } from '../services/useAuth';
 import { useWhatsAppSocket } from '../hooks/useWhatsAppSocket';
 import { whatsappAPI } from '../services/api';
+import { formatMessageTime } from '../utils/date';
 
 const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
 
@@ -163,15 +164,7 @@ const MediaPreview = ({ chatId, messageId, type, hasMedia }) => {
   return null;
 };
 
-const formatTime = (ts) => {
-  if (!ts) return '';
-  const d = new Date(ts * 1000);
-  const now = new Date();
-  const diff = now - d;
-  if (diff < 86400000) return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  if (diff < 604800000) return d.toLocaleDateString([], { weekday: 'short' });
-  return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
-};
+const formatTime = formatMessageTime;
 
 export default function MessagesPage() {
   const router = useRouter();

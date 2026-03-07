@@ -6,6 +6,10 @@ import authRoutes from './routes/auth.routes.js';
 import whatsappRoutes from './routes/whatsapp.routes.js';
 import apiRoutes from './routes/api.routes.js';
 import settingsRoutes from './routes/settings.routes.js';
+import contactRoutes from './routes/contact.routes.js';
+import templateRoutes from './routes/template.routes.js';
+import scheduleRoutes from './routes/schedule.routes.js';
+import workerRoutes from './routes/worker.routes.js';
 
 const app = express();
 
@@ -32,6 +36,10 @@ app.use('/auth', authRoutes);
 app.use('/whatsapp', whatsappRoutes);
 app.use('/api', apiRoutes);
 app.use('/settings', settingsRoutes);
+app.use('/contacts', contactRoutes);
+app.use('/templates', templateRoutes);
+app.use('/schedules', scheduleRoutes);
+app.use('/worker', workerRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

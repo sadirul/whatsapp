@@ -65,6 +65,45 @@ export const whatsappAPI = {
   downloadMessageMedia: (chatId, messageId) => api.get(`/whatsapp/chats/${encodeURIComponent(chatId)}/messages/${encodeURIComponent(messageId)}/media`, { responseType: 'blob' }),
 };
 
+// Schedule endpoints
+export const scheduleAPI = {
+  getSchedules: () => api.get('/schedules'),
+  getSchedule: (id) => api.get(`/schedules/${id}`),
+  getScheduleHistory: (id) => api.get(`/schedules/${id}/history`),
+  createSchedule: (data) => api.post('/schedules', data),
+  rescheduleSchedule: (id, data) => api.put(`/schedules/${id}/reschedule`, data),
+  cancelSchedule: (id) => api.put(`/schedules/${id}/cancel`),
+  deleteSchedule: (id) => api.delete(`/schedules/${id}`),
+};
+
+// Template endpoints
+export const templateAPI = {
+  getTemplates: () => api.get('/templates'),
+  getTemplate: (id) => api.get(`/templates/${id}`),
+  getTemplateFile: (id) => api.get(`/templates/${id}/file`, { responseType: 'blob' }),
+  createTemplate: (data) => api.post('/templates', data),
+  updateTemplate: (id, data) => api.put(`/templates/${id}`, data),
+  deleteTemplate: (id) => api.delete(`/templates/${id}`),
+};
+
+// Contact endpoints
+export const contactAPI = {
+  getGroups: () => api.get('/contacts/groups'),
+  createGroup: (data) => api.post('/contacts/groups', data),
+  updateGroup: (id, data) => api.put(`/contacts/groups/${id}`, data),
+  deleteGroup: (id) => api.delete(`/contacts/groups/${id}`),
+  getContacts: (groupId) => api.get('/contacts/contacts', { params: groupId ? { group_id: groupId } : {} }),
+  createContact: (data) => api.post('/contacts/contacts', data),
+  updateContact: (id, data) => api.put(`/contacts/contacts/${id}`, data),
+  deleteContact: (id) => api.delete(`/contacts/contacts/${id}`),
+  importContacts: (formData, groupId) => api.post(`/contacts/import${groupId ? `?group_id=${groupId}` : ''}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  exportContacts: (groupId) => {
+    const params = groupId ? { group_id: groupId } : {};
+    return api.get('/contacts/export', { params, responseType: 'blob' });
+  },
+  downloadSample: () => api.get('/contacts/sample', { responseType: 'blob' }),
+};
+
 // API endpoints
 export const messageAPI = {
   sendMessage: (data, apiKey) => {

@@ -161,6 +161,33 @@ export default function Dashboard() {
                 </div>
               </span>
             </Link>
+            <Link href="/contacts">
+              <span className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-emerald-300 transition cursor-pointer">
+                <span className="text-2xl">👥</span>
+                <div>
+                  <p className="font-medium text-gray-800">Contacts</p>
+                  <p className="text-sm text-gray-500">Groups & contacts</p>
+                </div>
+              </span>
+            </Link>
+            <Link href="/templates">
+              <span className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-emerald-300 transition cursor-pointer">
+                <span className="text-2xl">📝</span>
+                <div>
+                  <p className="font-medium text-gray-800">Templates</p>
+                  <p className="text-sm text-gray-500">Text, media, media URL</p>
+                </div>
+              </span>
+            </Link>
+            <Link href="/scheduler">
+              <span className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-emerald-300 transition cursor-pointer">
+                <span className="text-2xl">⏰</span>
+                <div>
+                  <p className="font-medium text-gray-800">Scheduler</p>
+                  <p className="text-sm text-gray-500">Schedule group messages</p>
+                </div>
+              </span>
+            </Link>
             <Link href="/test-api">
               <span className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-emerald-300 transition cursor-pointer">
                 <span className="text-2xl">🧪</span>

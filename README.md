@@ -75,6 +75,17 @@ npm run dev
 docker-compose up -d
 ```
 
+### 6. Scheduler Worker (optional)
+
+The scheduler uses a **database queue** (`queue_jobs` table). When you create a schedule, a job is enqueued. Run the worker to process jobs:
+
+```bash
+cd backend
+npm run worker
+```
+
+The worker polls the queue every 30s, claims jobs atomically (row lock), and sends messages to all contacts in the group.
+
 ---
 
 ## 🎯 Features
