@@ -15,12 +15,18 @@ const app = express();
 
 // Middleware - allow localhost origins in development
 const corsOrigin = process.env.CORS_ORIGIN;
+const isDev = process.env.NODE_ENV !== 'production';
 const allowedOrigins = corsOrigin
   ? corsOrigin.split(',').map((s) => s.trim())
   : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'];
+const localhostPattern = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin) {
+      callback(null, true);
+    } else if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else if (isDev && localhostPattern.test(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
