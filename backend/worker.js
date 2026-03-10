@@ -4,7 +4,11 @@ import { claimNextJob, completeJob, failJob, backfillQueueJobs } from './service
 
 dotenv.config();
 
-const POLL_INTERVAL_MS = 30000;
+const POLL_INTERVAL_MIN_MS = 5000;
+const POLL_INTERVAL_MAX_MS = 15000;
+
+const randomDelay = () =>
+  Math.floor(Math.random() * (POLL_INTERVAL_MAX_MS - POLL_INTERVAL_MIN_MS + 1)) + POLL_INTERVAL_MIN_MS;
 const SERVER_BASE = process.env.SERVER_BASE_URL || `http://localhost:${process.env.PORT || 3001}`;
 const WORKER_SECRET = process.env.WORKER_SECRET || '';
 
@@ -54,10 +58,12 @@ async function runWorker() {
 
   const runLoop = async () => {
     await processQueue();
-    setTimeout(runLoop, POLL_INTERVAL_MS);
+    const delay = randomDelay();
+    console.log(`[Scheduler Worker] Next poll in ${(delay / 1000).toFixed(1)}s`);
+    setTimeout(runLoop, delay);
   };
 
-  console.log(`[Scheduler Worker] Running. Polling queue every ${POLL_INTERVAL_MS / 1000}s → ${SERVER_BASE}`);
+  console.log(`[Scheduler Worker] Running. Polling queue every 5–15s randomly → ${SERVER_BASE}`);
   await runLoop();
 }
 
